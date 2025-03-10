@@ -28,9 +28,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 function connectToDb() {
   mongoose.connect(process.env.DB_CONNECT).then(() => {
-      console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB');
   }).catch((err) => {
-      console.error('Error connecting to MongoDB:', err);
+    console.error('Error connecting to MongoDB:', err);
   });
 }
 connectToDb();
@@ -46,18 +46,18 @@ app.get('/signup', (req, res) => {
 app.post('/signup', (req, res) => {
   let { firstname, lastname, email, password } = req.body;
   userModel.create({
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      password: password
+    firstname: firstname,
+    lastname: lastname,
+    email: email,
+    password: password
   })
-      .then(user => {
-          req.session.user = user;
-          res.status(201).redirect('/mainpage');
-      })
-      .catch(err => {
-          res.status(500).send('Error registering user');
-      });
+    .then(user => {
+      req.session.user = user;
+      res.status(201).redirect('/mainpage');
+    })
+    .catch(err => {
+      res.status(500).send('Error registering user');
+    });
 });
 
 app.get('/login', (req, res) => {
@@ -72,11 +72,11 @@ app.post('/login', (req, res) => {
         req.session.user = user;
         res.status(200).redirect('/mainpage');
       } else {
-        res.status(401).send('Invalid email or password');
+        res.render('error', { message: 'Invalid email or password' });
       }
     })
     .catch(err => {
-      res.status(500).send('Error logging in');
+      res.render('error', { message: 'Error logging in' });
     });
 });
 
@@ -91,6 +91,11 @@ app.get("/mainpage", (req, res) => {
 function validateLogin(email, password) {
   return userModel.findOne({ email: email, password: password });
 }
+
+
+app.get("/error", (req, res) => {
+  res.render("error.ejs", { message: req.query.message });
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
