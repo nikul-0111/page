@@ -36,11 +36,11 @@ function connectToDb() {
 connectToDb();
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.render('start.ejs');
 });
 
 app.get('/signup', (req, res) => {
-  res.render("signup");
+  res.render("signup.ejs");
 });
 
 app.post('/signup', (req, res) => {
@@ -61,7 +61,7 @@ app.post('/signup', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.render("login");
+  res.render("login.ejs");
 });
 
 app.post('/login', (req, res) => {
